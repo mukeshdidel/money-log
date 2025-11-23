@@ -4,11 +4,11 @@ package com.mukesh.moneyLogBackend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
-@Table(name = "users")
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +27,15 @@ public class User {
 
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Wallets> wallets;
 
-    public User(){
+
+    public Users(){
 
     }
 
-    public User(int id, String username, String password, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Users(int id, String username, String password, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -87,5 +90,13 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Wallets> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<Wallets> wallets) {
+        this.wallets = wallets;
     }
 }
