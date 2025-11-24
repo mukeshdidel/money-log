@@ -1,8 +1,7 @@
 package com.mukesh.moneyLogBackend.utils;
 
 
-import com.mukesh.moneyLogBackend.dto.ProfileDto;
-import com.mukesh.moneyLogBackend.model.Profile;
+import com.mukesh.moneyLogBackend.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +22,10 @@ public class JwtUtil {
 
     }
 
-    public String generateJwtToken(Profile profile) {
+    public String generateJwtToken(User user) {
         return Jwts.builder()
-                .subject(profile.getEmail())
-                .claim("userId", profile.getId())
+                .subject(user.getEmail())
+                .claim("userId", user.getId())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+1000*60*10))
                 .signWith(getSecretKey())
@@ -41,4 +40,6 @@ public class JwtUtil {
                 .getPayload()
                 .getSubject();
     }
+
+
 }

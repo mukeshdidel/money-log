@@ -1,0 +1,7 @@
+package com.mukesh.moneyLogBackend.exceptions;
+
+public class EmailAlreadyRegisteredException extends RuntimeException {
+    public EmailAlreadyRegisteredException(String email) {
+        super("Username '" + email + "' is already registered.");
+    }
+}
