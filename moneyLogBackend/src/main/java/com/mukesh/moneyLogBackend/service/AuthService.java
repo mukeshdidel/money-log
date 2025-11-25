@@ -58,7 +58,7 @@ public class AuthService {
         newUser = userRepo.save(newUser);
 
         // send activation link
-        String activationLink = "http://localhost:8080/api/v1/activate?token=" + newUser.getActivationToken();
+        String activationLink = "http://localhost:8080/api/v1/auth/activate?token=" + newUser.getActivationToken();
         String subject = "Activate your money log account";
         String body = "click on the link to activate your account: " + activationLink;
         emailService.sendEmail(newUser.getEmail(), subject, body);
@@ -100,11 +100,8 @@ public class AuthService {
         }
 
         User user = (User) authentication.getPrincipal();
-
         if (user == null) throw new AssertionError();
-
         String token = jwtUtil.generateJwtToken(user);
-
         return LoginResponseDto
                 .builder()
                 .token(token)
