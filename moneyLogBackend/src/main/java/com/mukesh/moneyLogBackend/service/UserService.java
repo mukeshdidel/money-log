@@ -17,11 +17,12 @@ public class UserService {
     private final UserRepo userRepo;
     private final  EmailService emailService;
 
-    public User getCurrentProfile(){
+    public User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         return  userRepo
-                .findByEmail(authentication.getName())
-                .orElseThrow(()->new UsernameNotFoundException("profile not found with this email"));
+                .findByUsername(authentication.getName())
+                .orElseThrow(()->new UsernameNotFoundException("profile not found with username: "+authentication.getName()));
     }
 
 }

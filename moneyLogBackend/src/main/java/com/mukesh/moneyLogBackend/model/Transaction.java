@@ -1,6 +1,7 @@
 package com.mukesh.moneyLogBackend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false)
     private Double amount;
 
 
@@ -35,6 +36,7 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)

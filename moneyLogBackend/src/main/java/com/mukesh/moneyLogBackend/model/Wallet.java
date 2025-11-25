@@ -1,6 +1,8 @@
 package com.mukesh.moneyLogBackend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +24,10 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long walletId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String name;
 
-
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false)
     private Double balance;
 
     @Column(nullable = false)
@@ -37,6 +38,7 @@ public class Wallet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"password", "activationToken"})
     private User user;
 
     @CreationTimestamp
