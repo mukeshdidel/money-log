@@ -1,7 +1,7 @@
 "use client";
 
 import UserIcon from "@/Icons/UserIcon";
-import { selectUser } from "@/lib/features/user/UserSlice";
+import { selectUser } from "@/lib/features/user/userSlice";
 import { useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
