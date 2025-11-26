@@ -2,6 +2,7 @@ package com.mukesh.moneyLogBackend.service;
 
 
 import com.mukesh.moneyLogBackend.Repository.UserRepo;
+import com.mukesh.moneyLogBackend.dto.ProfileResponseDto;
 import com.mukesh.moneyLogBackend.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,16 @@ public class UserService {
         return  userRepo
                 .findByUsername(authentication.getName())
                 .orElseThrow(()->new UsernameNotFoundException("profile not found with username: "+authentication.getName()));
+    }
+
+    public ProfileResponseDto getUserProfile() {
+        User user = getCurrentUser();
+        return ProfileResponseDto.builder()
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .username(user.getUsername())
+                .id(user.getId())
+                .build();
     }
 
 }

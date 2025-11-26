@@ -5,12 +5,18 @@ import com.mukesh.moneyLogBackend.Repository.WalletRepo;
 import com.mukesh.moneyLogBackend.dto.WalletGetResponseDto;
 import com.mukesh.moneyLogBackend.dto.WalletPostRequestDto;
 import com.mukesh.moneyLogBackend.dto.WalletPostResponseDto;
+import com.mukesh.moneyLogBackend.dto.WalletWithTransResponseDto;
 import com.mukesh.moneyLogBackend.model.User;
 import com.mukesh.moneyLogBackend.model.Wallet;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -62,5 +68,20 @@ public class WalletService {
         }).toList();
     }
 
-    public Wallet
+
+    public WalletWithTransResponseDto retrieveWalletById(Long id) {
+        User user = userService.getCurrentUser();
+        Wallet wallet = walletRepo.findByWalletIdAndUser(id, user).orElseThrow(()-> new EntityNotFoundException("cant find wallet with id: "+ id));
+
+        return WalletWithTransResponseDto
+                .builder()
+                .walletId(wallet.getWalletId())
+                .name(wallet.getName())
+                .balance(wallet.getBalance())
+                .currency(wallet.getCurrency())
+                .description(wallet.getDescription())
+                .updatedAt(wallet.getUpdatedAt())
+                .transactions(wallet.getTransactions())
+                .build();
+    }
 }

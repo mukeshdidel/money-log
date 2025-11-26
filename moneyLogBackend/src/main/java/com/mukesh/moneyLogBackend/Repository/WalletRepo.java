@@ -6,9 +6,11 @@ import com.mukesh.moneyLogBackend.model.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WalletRepo extends JpaRepository<Wallet , Long> {
 
     List<Wallet> findByUser(User user);
 
+    Optional<Wallet> findByWalletIdAndUser(Long walletId, User user);
 }

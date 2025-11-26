@@ -5,15 +5,13 @@ import com.mukesh.moneyLogBackend.Repository.WalletRepo;
 import com.mukesh.moneyLogBackend.dto.WalletGetResponseDto;
 import com.mukesh.moneyLogBackend.dto.WalletPostRequestDto;
 import com.mukesh.moneyLogBackend.dto.WalletPostResponseDto;
+import com.mukesh.moneyLogBackend.dto.WalletWithTransResponseDto;
 import com.mukesh.moneyLogBackend.model.Wallet;
 import com.mukesh.moneyLogBackend.service.WalletService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +29,10 @@ public class WalletController {
     @PostMapping("/wallet")
     public ResponseEntity<WalletPostResponseDto> createWallet(@RequestBody WalletPostRequestDto walletPostRequestDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(walletService.createWallet(walletPostRequestDto));
+    }
+
+    @GetMapping("/wallet/{id}")
+    public ResponseEntity<WalletWithTransResponseDto> retrieveWalletById(@PathVariable Long id) {
+        return ResponseEntity.ok(walletService.retrieveWalletById(id));
     }
 }
