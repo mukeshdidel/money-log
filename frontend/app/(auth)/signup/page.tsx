@@ -47,11 +47,14 @@ const page = () => {
 
 
     return (
-        <div className="bg-slate-800 p-4 lg:p-16 rounded-2xl flex flex-col text-white text-center max-w-3xl gap-4 shadow-2xl">
+        <div className="bg-slate-800 p-6 lg:p-12 rounded-2xl flex flex-col text-white text-center max-w-3xl gap-4 shadow-2xl">
             <Toaster />
-            <div className="flex justify-center items-center"><img src="/logo.png" alt="Money Log" className="h-30 lg:h-40"/></div>
-            <h1 className="py-4 lg:pt-8 text-3xl font-semibold">Create an Account</h1>
-            <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-4 items-center justify-center pt-10 ">
+            <div className="py-4">
+                <h1 className="mb-2 lg:pt-8 text-3xl font-semibold">Create An Account</h1>
+                <p className="text-slate-400">Start tracking your spendings</p>
+            </div> 
+
+            <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-4 items-center justify-center">
                 <Input label="Full Name" value={fullName} onChange={(e)=> setFullName(e.target.value)} placeHolder="Enter your full name" type="text" className="min-w-72 bg-slate-700"  />
                 <Input label="Username" value={username} onChange={(e)=> setUsername(e.target.value)} placeHolder="Enter your username" type="text" className="min-w-72 bg-slate-700" />
             </div>
@@ -60,7 +63,7 @@ const page = () => {
                 <Input label="password" value={password} onChange={(e)=> setPassword(e.target.value)} placeHolder="Enter password" type="password" className="min-w-72 bg-slate-700" />
             </div>
             {error && <div className="text-white bg-red-600/50 rounded w-full p-3"> {error}</div>}
-            <div className="flex justify-center items-center"><button className={`p-2 my-2 ${ loading ? "bg-blue-300" : "bg-blue-700"} rounded-xl border border-blue-300 px-4`} onClick={handleSignup}>Signup</button></div>
+            <div className="flex justify-center items-center mt-4"><button className={`p-2 my-2 ${ loading ? "bg-blue-300" : "bg-blue-700"} rounded-xl border border-blue-300 px-4`} onClick={handleSignup}>Signup</button></div>
             <p>Already have an account? <span className="cursor-pointer text-purple-700"><Link href={"/login"}>Login</Link></span></p>
         </div>
     )

@@ -1,11 +1,68 @@
+"use client";
+
+import UserIcon from "@/Icons/UserIcon";
+import { selectUser } from "@/lib/features/user/UserSlice";
+import { useAppSelector } from "@/lib/hooks";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 
 const Topbar = () => {
-  return (
-    <div className="flex justify-around bg-slate-800 py-2 border-b border-slate-500 fixed top-0 left-0 w-full">
-        <img src="/logo.png" alt="" className="h-14 lg:h-20" />
-        <div></div>
-    </div>
-  )
-}
+  const [profileDropdown, setProfileDropdown] = useState(false);
+  const user = useAppSelector(selectUser);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router =  useRouter();
 
-export default Topbar
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (!dropdownRef.current?.contains(e.target as Node)) {
+        setProfileDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div className="flex justify-between items-center bg-slate-800 px-4 border-b border-slate-600 sticky top-0 left-0 h-16 lg:h-20 z-50">
+      
+      <div className="flex items-center">
+        <img src="/logo.png" alt="Money Log" className="h-12 w-28 lg:h-16 lg:w-36 object-contain" />
+      </div>
+
+      <div className="relative flex items-center pr-4">
+        <button
+          className="rounded-full bg-slate-700 p-2 text-white cursor-pointer hover:bg-slate-600 transition"
+          onClick={() => setProfileDropdown(!profileDropdown)}
+        >
+          <UserIcon  />
+        </button>
+
+        <div
+          ref={dropdownRef}
+          className={`absolute top-14 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl w-64 transform transition-all duration-200 origin-top-right
+            ${profileDropdown ? "opacity-100 scale-100 visible" : "opacity-0 scale-95 invisible"}`}
+        >
+          <div className="p-4 border-b border-slate-700">
+            <p className="text-lg font-semibold text-white">{user.fullName}</p>
+            <p className="text-sm text-slate-400">@{user.username}</p>
+            <p className="text-sm text-slate-400 mt-1">{user.email}</p>
+          </div>
+
+          <div className="flex flex-col p-2">
+            <button 
+              className="w-full text-left px-4 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500 hover:text-white transition" 
+              onClick={() => {
+                localStorage.removeItem("token");
+                router.push("/login");
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Topbar;

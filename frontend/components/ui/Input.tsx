@@ -18,7 +18,7 @@ const Input = ({label, id, name, onChange, placeHolder, type, value, className}:
             <p className="text-xl">{label}</p>
             <input 
                 type={type} placeholder={placeHolder} onChange={onChange} value={value} id={id} name={name}
-                className={`border p-2 rounded-lg ${className}`} 
+                className={`border border-slate-500 p-2 rounded-lg ${className}`} 
             />
         </div>
     )
