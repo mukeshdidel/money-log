@@ -1,6 +1,5 @@
 package com.mukesh.moneyLogBackend.dto;
 
-import com.mukesh.moneyLogBackend.model.Category;
 import com.mukesh.moneyLogBackend.model.Transaction;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class WalletWithTransResponseDto {
+public class WalletGetResponseDto {
     private Long walletId;
     private String name;
     private Double balance;
