@@ -3,7 +3,7 @@
 import AddWallet from '@/components/AddWallet'
 import { BE_URL } from '@/config/appConfig'
 import CardIcon from '@/Icons/CardIcon'
-import { addWallets, selectWallets } from '@/lib/features/wallets/walletSlice'
+import { selectwallets, setwallets } from '@/lib/features/wallets/walletSlice'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import axios from 'axios'
 import Link from 'next/link'
@@ -16,31 +16,7 @@ const formatCurrency = (value: number, currency = 'USD') =>
 const page = () => {
 
   const [showForm, setShowForm] = useState(false)
-  const wallets = useAppSelector(selectWallets);
-  const dispatch = useAppDispatch();
-
-  const fetchWallets = async () => {
-    try {
-        const res = await axios.get(`${BE_URL}/wallet`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-        dispatch(addWallets(res.data));
-    } catch (error) {
-        console.error('Error fetching wallets:', error);
-    }
-  }
-
-  useEffect(() => {
-    fetchWallets();
-  }, [dispatch])
-
-  useEffect(() => {
-    localStorage.setItem('moneylog_wallets', JSON.stringify(wallets))
-  }, [wallets])
-
-
+  const wallets = useAppSelector(selectwallets);
 
 
 

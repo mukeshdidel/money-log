@@ -4,6 +4,8 @@ import Input from './ui/Input'
 import XIcon from '@/Icons/XIcon';
 import axios from 'axios';
 import { BE_URL } from '@/config/appConfig';
+import { useAppDispatch } from '@/lib/hooks';
+import { addWallet } from '@/lib/features/wallets/walletSlice';
 
 const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAction<boolean>>}) => {
 
@@ -15,7 +17,9 @@ const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAct
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
 
-    const addWallet = async () => {
+    const dispatch = useAppDispatch();
+
+    const createsWallet = async () => {
         if(loading) return;
         setLoading(true);
     
@@ -32,19 +36,19 @@ const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAct
         if(description.trim() === '') {
             setError('Please enter a valid description for the wallet.');
             return;
-        }
-
+        }        
         try {
-        const res = await axios.post(`${BE_URL}/wallet`, {
-            name, balance, description, currency
-        },
-        {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-        const data = res.data;
-        setShowForm(false);
+            const res = await axios.post(`${BE_URL}/wallet`, {
+                name, balance, description, currency
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            const data = res.data;
+            setShowForm(false);
+            dispatch(addWallet(data));
         } catch (error) {
             setError('Failed to add wallet. Please try again.'); 
         }finally {
@@ -95,7 +99,7 @@ const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAct
                 <button
                     type="submit"
                     className="px-4 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white"
-                    onClick={addWallet}
+                    onClick={createsWallet}
                 >
                     Create
                 </button>

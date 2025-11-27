@@ -4,6 +4,7 @@ import Bottombar from "@/components/bottombar/Bottombar"
 import Sidebar from "@/components/Sidebar/Sidebar"
 import Topbar from "@/components/Topbar/Topbar"
 import { BE_URL } from "@/config/appConfig"
+import { setCategories } from "@/lib/features/categories/categoriesSlice"
 import { setUser } from "@/lib/features/user/userSlice"
 import { useAppDispatch } from "@/lib/hooks"
 import axios from "axios"
@@ -31,21 +32,38 @@ const layout = ({children}: {children: ReactNode}) => {
         }
     }
 
+    const getCategories = async () => {
+        try {
+            const res =  await axios.get(`${BE_URL}/category`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+            const data = res.data;            
+            dispatch(setCategories(data));
+
+        }
+        catch(err){
+            console.error("Error fetching categories:", err);
+        }
+    }
+
     useEffect(()=> {
         if(!localStorage.getItem("token")){
             router.push("/login");
         }
         getProfile();
+        getCategories();
     },[dispatch])
 
     return (
-        <div className="h-screen bg-slate-900 lg:bg-slate-950 text-white">
+        <div className="min-h-screen bg-slate-900 lg:bg-slate-950 text-white">
             <Topbar />
             <div className="flex">
                 <div className="max-[1024px]:hidden">
                     <Sidebar />
                 </div>
-                <div className="grow m-3 rounded-lg p-5 lg:bg-slate-900 ">{children}</div>
+                <div className="grow m-3 rounded-lg p-5 lg:bg-slate-900 pb-16">{children}</div>
             </div>
             <Bottombar />
         </div>

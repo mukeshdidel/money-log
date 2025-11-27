@@ -1,14 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from "./features/user/userSlice";
 import walletReducer  from './features/wallets/walletSlice';
-import transactionByWalletReducer from './features/transactionsByWallet/transactionByWallet';
+import categoriesReducer from './features/categories/categoriesSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
         userReducer,
         walletReducer,
-        transactionByWalletReducer
+        categoriesReducer
       }
   })
 }
