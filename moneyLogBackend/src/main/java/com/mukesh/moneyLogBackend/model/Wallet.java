@@ -1,7 +1,10 @@
 package com.mukesh.moneyLogBackend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+
 public class Wallet {
 
     @Id
@@ -47,6 +51,8 @@ public class Wallet {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "wallet")
+
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Transaction> transactions;
 }

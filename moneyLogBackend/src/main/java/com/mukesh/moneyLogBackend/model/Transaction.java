@@ -1,7 +1,10 @@
 package com.mukesh.moneyLogBackend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,8 +45,8 @@ public class Transaction {
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "wallet_id", nullable = false)
+    @JsonBackReference
     private Wallet wallet;
 
     @CreationTimestamp
