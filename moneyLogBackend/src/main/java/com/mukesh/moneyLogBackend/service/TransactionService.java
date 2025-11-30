@@ -4,6 +4,8 @@ package com.mukesh.moneyLogBackend.service;
 import com.mukesh.moneyLogBackend.Repository.CategoryRepo;
 import com.mukesh.moneyLogBackend.Repository.TransactionRepo;
 import com.mukesh.moneyLogBackend.Repository.WalletRepo;
+import com.mukesh.moneyLogBackend.dto.TransactionGetResponseDto;
+import com.mukesh.moneyLogBackend.dto.TransactionListDto;
 import com.mukesh.moneyLogBackend.dto.TransactionRequestDto;
 import com.mukesh.moneyLogBackend.model.Transaction;
 import com.mukesh.moneyLogBackend.model.User;
@@ -49,10 +51,9 @@ public class TransactionService {
         return  transaction;
     }
 
-    public List<Transaction> getAllTransactions() {
+    public List<TransactionListDto> getAllTransactions() {
         User user = userService.getCurrentUser();
 
-        return  transactionRepo.findUserTransactionsWithWalletAndCategory(user.getId());
-
+        return  transactionRepo.findAllUserTransactions(user.getId());
     }
 }

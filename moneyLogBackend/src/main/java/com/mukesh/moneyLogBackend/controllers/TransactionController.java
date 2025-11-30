@@ -1,6 +1,8 @@
 package com.mukesh.moneyLogBackend.controllers;
 
 
+import com.mukesh.moneyLogBackend.dto.TransactionGetResponseDto;
+import com.mukesh.moneyLogBackend.dto.TransactionListDto;
 import com.mukesh.moneyLogBackend.dto.TransactionRequestDto;
 import com.mukesh.moneyLogBackend.model.Transaction;
 import com.mukesh.moneyLogBackend.service.TransactionService;
@@ -24,7 +26,7 @@ public class TransactionController {
     }
 
     @GetMapping("/transaction")
-    public List<Transaction> getAllTransactions() {
+    public List<TransactionListDto> getAllTransactions() {
         return transactionService.getAllTransactions();
 
     }
