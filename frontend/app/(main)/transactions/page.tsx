@@ -1,80 +1,38 @@
 "use client"
+import { BE_URL } from '@/config/appConfig';
 import DownArrow from '@/Icons/DownArrow';
 import UpArrow from '@/Icons/UpArrow';
-import React, { useState } from 'react'
-
-// --- Types ---
-type Transaction = {
-    transactionId: number;
-    amount: number;
-    isIncome: boolean;
-    description: string;
-    category: { name: string; color: string } | null;
-    date: string;
-};
-
-type Wallet = {
-    id: number;
-    name: string;
-    currency: string;
-    transactions: Transaction[];
-};
-
-// --- Mock Data ---
-const MOCK_WALLET: Wallet = {
-    id: 1,
-    name: "Main Wallet",
-    currency: "USD",
-    transactions: [
-        {
-            transactionId: 101,
-            amount: 2500.00,
-            isIncome: true,
-            description: "Monthly Salary",
-            category: { name: "Salary", color: "emerald" },
-            date: "2023-10-25T09:00:00Z"
-        },
-        {
-            transactionId: 102,
-            amount: 45.50,
-            isIncome: false,
-            description: "Grocery Shopping",
-            category: { name: "Food", color: "orange" },
-            date: "2023-10-26T14:30:00Z"
-        },
-        {
-            transactionId: 103,
-            amount: 12.99,
-            isIncome: false,
-            description: "Netflix Subscription",
-            category: { name: "Entertainment", color: "purple" },
-            date: "2023-10-27T10:00:00Z"
-        },
-        {
-            transactionId: 104,
-            amount: 150.00,
-            isIncome: true,
-            description: "Freelance Project",
-            category: { name: "Freelance", color: "blue" },
-            date: "2023-10-28T16:20:00Z"
-        },
-        {
-            transactionId: 105,
-            amount: 60.00,
-            isIncome: false,
-            description: "Gas Station",
-            category: { name: "Transport", color: "yellow" },
-            date: "2023-10-29T18:15:00Z"
-        },
-    ]
-};
+import { selectTransactions, setTransactions } from '@/lib/features/transactions/transactionSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import axios from 'axios';
+import { useEffect, useState } from 'react'
 
 const Page = () => {
 
-    const wallet = MOCK_WALLET; 
+    const transactions = useAppSelector(selectTransactions)
     const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
 
-    const filteredTransactions = wallet.transactions.filter(tx => {
+    const dispatch = useAppDispatch();
+
+    const fetchTransactions = async () => {
+        try {
+            const res = await  axios.get(`${BE_URL}/transaction`, {
+                headers: {
+                    "Authorization" : `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+            dispatch(setTransactions(res.data));
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(()=>{
+        fetchTransactions();
+    }, [dispatch])
+
+    const filteredTransactions = transactions.filter(tx => {
         if (filter === 'income') return tx.isIncome;
         if (filter === 'expense') return !tx.isIncome;
         return true;
@@ -133,9 +91,9 @@ const Page = () => {
                                                 </h4>
                                                 
                                                 <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                    {tx.category && (
+                                                    {tx.categoryName && (
                                                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium border bg-slate-700 border-slate-600 text-slate-300 bg-opacity-30`}>
-                                                            {tx.category.name}
+                                                            {tx.categoryName}
                                                         </span>
                                                     )}
                                                 </div>
@@ -144,15 +102,15 @@ const Page = () => {
 
                                         <div className="flex flex-col items-end gap-1">
                                             <div className={`font-bold text-base md:text-lg tracking-tight tabular-nums ${
-                                                tx.isIncome ? 'text-emerald-400' : 'text-slate-200'
+                                                tx.isIncome ? 'text-emerald-500' : 'text-red-500'
                                             }`}>
                                                 {tx.isIncome ? '+' : '-'}
-                                                {tx.amount} {wallet.currency}
+                                                {tx.amount} {tx.currency}
                                             </div>
                                             
                                             <div className="flex items-center gap-1.5 text-xs text-slate-500 group-hover:text-slate-400 transition-colors">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                                                {wallet.name}
+                                                {tx.walletName} &bull; {new Date(tx.transactionDate).toLocaleDateString()}
                                             </div>
                                         </div>
                                     </div>

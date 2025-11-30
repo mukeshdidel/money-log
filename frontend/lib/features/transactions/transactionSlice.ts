@@ -1,70 +1,34 @@
 import { RootState } from '@/lib/store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
- interface State {
-  walletId: number;
-  name: string;
-  balance: number;
-  currency: string;
+ 
+interface Transaction  {
+  transactionId: number;
+  amount: number;
+  isIncome: boolean;
+  transactionDate: string;
   description: string;
-  updatedAt: string;
-  transactions: {
-    transactionId: number;
-    amount: number;
-    isIncome: boolean;
-    transactionDate: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string | null;
-    category: {
-      categoryId: number;
-      name: string;
-      description: string;
-      colorCode: string;
-      createdByUser: boolean;
-      userId: number | null;
-      createdAt: string;
-      updatedAt: string;
-    };
-  }[];
-}
+  walletId: number;
+  walletName: string;
+  currency: string;
+  categoryId: number;
+  categoryName: string;
+};
 
 
-const initialState: State[] = [];
 
+const initialState: Transaction[] = [];
 
-export const walletSlice = createSlice({
-  name: 'wallet',
+export const transactionSlice = createSlice({
+  name: 'transaction',
   initialState,
   reducers: {
-    setwallets: (state, action: PayloadAction<State[]>) => {
-      state = action.payload;
-      return state;
-    }, 
-    addWallet: (state, action: PayloadAction<State>) => {
-      state.push(action.payload);
-    },
-    removeWallet: (state, action: PayloadAction<number>) => {
-      return state.filter(wallet => wallet.walletId !== action.payload);
-    },
-    addTransaction: (state, action: PayloadAction<{walletId: number, transaction: State['transactions'][0]}>) => {
-      const { walletId, transaction } = action.payload;
-      const wallet = state.find(w => w.walletId === walletId);
-      if (wallet) {
-        wallet.transactions.push(transaction);
-        if (transaction.isIncome) {
-          wallet.balance += transaction.amount;
-        } else {
-          wallet.balance -= transaction.amount;
-        }
-      } 
+    setTransactions: (state, action: PayloadAction<Transaction[]>) => {
+      return action.payload;
     },
   }
 })
 
-export const { setwallets, addWallet, removeWallet, addTransaction } = walletSlice.actions
-export const selectwallets = (state: RootState) => state.walletReducer;
-export const selectWalletById = (walletId: number) => (state: RootState) => 
-    state.walletReducer.find(wallet => wallet.walletId === walletId);
+export const { setTransactions } = transactionSlice.actions
+export const selectTransactions = (state: RootState) => state.transactionReducer;
 
-export default walletSlice.reducer
+export default transactionSlice.reducer

@@ -2,13 +2,15 @@ import { configureStore } from '@reduxjs/toolkit'
 import userReducer from "./features/user/userSlice";
 import walletReducer  from './features/wallets/walletSlice';
 import categoriesReducer from './features/categories/categoriesSlice';
+import transactionReducer from './features/transactions/transactionSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
         userReducer,
         walletReducer,
-        categoriesReducer
+        categoriesReducer,
+        transactionReducer
       }
   })
 }
