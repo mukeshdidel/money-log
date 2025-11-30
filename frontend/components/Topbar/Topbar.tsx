@@ -1,8 +1,8 @@
 "use client";
 
-import UserIcon from "@/Icons/UserIcon";
 import { selectUser } from "@/lib/features/user/userSlice";
 import { useAppSelector } from "@/lib/hooks";
+import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
@@ -34,7 +34,7 @@ const Topbar = () => {
           className="rounded-full bg-slate-700 p-2 text-white cursor-pointer hover:bg-slate-600 transition"
           onClick={() => setProfileDropdown(!profileDropdown)}
         >
-          <UserIcon  />
+          <User  />
         </button>
 
         <div

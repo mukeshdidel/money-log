@@ -1,11 +1,11 @@
 "use client"
 import React from 'react'
 import Input from './ui/Input'
-import XIcon from '@/Icons/XIcon';
 import axios from 'axios';
 import { BE_URL } from '@/config/appConfig';
 import { useAppDispatch } from '@/lib/hooks';
 import { addWallet } from '@/lib/features/wallets/walletSlice';
+import { X } from 'lucide-react';
 
 const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAction<boolean>>}) => {
 
@@ -49,8 +49,8 @@ const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAct
             const data = res.data;
             setShowForm(false);
             dispatch(addWallet(data));
-        } catch (error) {
-            setError('Failed to add wallet. Please try again.'); 
+        } catch (error : any) {
+            setError(error?.response?.data?.error || "Something went wrong"); 
         }finally {
             setLoading(false);
         }
@@ -73,7 +73,7 @@ const AddWallet = ({setShowForm}: {setShowForm: React.Dispatch<React.SetStateAct
                 className="text-slate-300 hover:text-slate-100 hover:bg-slate-800 p-1 rounded-lg"
                 aria-label="Close"
                 >
-                <XIcon />
+                <X />
                 </button>
             </div>
 

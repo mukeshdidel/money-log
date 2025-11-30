@@ -2,20 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import ArrowsIcon from "@/Icons/ArrowsIcon";
-import HomeIcon from "@/Icons/HomeIcon";
-import SquarePlusIcon from "@/Icons/SquarePlusIcon";
-import WalletIcon from "@/Icons/WalletIcon";
+import { ArrowLeftRight, House, Wallet } from "lucide-react";
 
 const Bottombar = () => {
 
   const pathname = usePathname();
 
   const links = [
-    { name: "Dashboard", href: "/dashboard", icon: <HomeIcon /> },
-    { name: "wallets", href: "/wallets", icon: <WalletIcon /> },
-    { name: "Transactions", href: "/transactions", icon: <ArrowsIcon /> },
+    { name: "Dashboard", href: "/dashboard", icon: <House />  },
+    { name: "wallets", href: "/wallets", icon: <Wallet /> },
+    { name: "Transactions", href: "/transactions", icon: <ArrowLeftRight /> },
     // { name: "categories", href: "/categories", icon: <SquarePlusIcon /> },
   ];
 

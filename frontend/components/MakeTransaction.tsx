@@ -1,15 +1,15 @@
 "use client"
 import React from 'react'
 import Input from './ui/Input'
-import XIcon from '@/Icons/XIcon';
 import axios from 'axios';
 import { BE_URL } from '@/config/appConfig';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectCategories } from '@/lib/features/categories/categoriesSlice';
 import Select from './ui/Select';
 import { addTransaction } from '@/lib/features/wallets/walletSlice';
+import { X } from 'lucide-react';
 
-const MakeTransaction = ({setShowForm, walletId}: {setShowForm: React.Dispatch<React.SetStateAction<boolean>>, walletId: number}) => {4
+const MakeTransaction = ({setShowForm, walletId}: {setShowForm: React.Dispatch<React.SetStateAction<boolean>>, walletId: number}) => {
 
     const categories = useAppSelector(selectCategories);
 
@@ -47,8 +47,8 @@ const MakeTransaction = ({setShowForm, walletId}: {setShowForm: React.Dispatch<R
             const data = res.data;
             setShowForm(false);
             dispatch(addTransaction({walletId, transaction: data}));
-        } catch (error) {
-            setError('Failed to add wallet. Please try again.'); 
+        } catch (error : any) {
+            setError(error?.response?.data?.error || "Something went wrong"); 
         }finally {
             setLoading(false);
         }
@@ -71,7 +71,7 @@ const MakeTransaction = ({setShowForm, walletId}: {setShowForm: React.Dispatch<R
                 className="text-slate-300 hover:text-slate-100 hover:bg-slate-800 p-1 rounded-lg"
                 aria-label="Close"
                 >
-                <XIcon />
+                <X />
                 </button>
             </div>
 

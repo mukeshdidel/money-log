@@ -1,9 +1,9 @@
 'use client'
 
 import AddWallet from '@/components/AddWallet'
-import CardIcon from '@/Icons/CardIcon'
 import { selectwallets} from '@/lib/features/wallets/walletSlice'
 import {useAppSelector } from '@/lib/hooks'
+import { CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -54,7 +54,7 @@ const page = () => {
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center text-emerald-400">
-                                <CardIcon />
+                                <CreditCard />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-slate-100 tracking-tight">{w.name}</h3>

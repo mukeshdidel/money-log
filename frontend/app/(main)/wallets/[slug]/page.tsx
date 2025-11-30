@@ -1,12 +1,12 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import CardIcon from '@/Icons/CardIcon' 
 import { useAppSelector } from '@/lib/hooks'
 import TransactionHistory from '@/components/TransactionHistory'
 import { selectWalletById } from '@/lib/features/wallets/walletSlice'
 import { useState } from 'react'
 import MakeTransaction from '@/components/MakeTransaction'
+import { CreditCard } from 'lucide-react'
 
 
 
@@ -38,7 +38,7 @@ const page = () => {
                     
                     <div className="flex items-start gap-2 lg:gap-5">
                         <div className="p-4 rounded-lg lg:rounded-2xl bg-slate-700/50 border border-slate-600 flex items-center justify-center text-emerald-400 shadow-inner">
-                            <CardIcon  />
+                            <CreditCard  />
                         </div>
                         <div >
                             <h1 className="text-xl lg:text-3xl font-bold tracking-tight text-white mb-1">{wallet?.name}</h1>

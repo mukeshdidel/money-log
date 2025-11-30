@@ -13,23 +13,10 @@ import {
   ArrowUpRight, ArrowDownRight, Globe
 } from 'lucide-react';
 
-// Currency symbols & formatting
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  JPY: '¥',
-  INR: '₹',
-  BTC: '₿',
-  ETH: 'Ξ',
-  CAD: 'C$',
-  AUD: 'A$',
-  CHF: 'CHF',
-};
+
 
 const formatCurrency = (amount: number, currency: string) => {
-  const symbol = CURRENCY_SYMBOLS[currency] || currency;
-  return `${symbol}${amount.toLocaleString(undefined, {
+  return `${currency} ${amount.toLocaleString(undefined, {
     minimumFractionDigits: currency === 'JPY' ? 0 : 2,
     maximumFractionDigits: currency === 'JPY' ? 0 : 2,
   })}`;
@@ -84,8 +71,8 @@ export default function DashboardPage() {
     };
   }).filter(cat => cat.total > 0);
 
-  const dailyData = Array.from({ length: 14 }, (_, i) => {
-    const date = startOfDay(subDays(new Date(), 13 - i));
+  const dailyData = Array.from({ length: 7 }, (_, i) => {
+    const date = startOfDay(subDays(new Date(), 6 - i));
     const dateStr = format(date, 'yyyy-MM-dd');
     const displayDate = format(date, 'MMM dd');
 
@@ -110,13 +97,13 @@ export default function DashboardPage() {
     };
   });
 
-  const totalIncomeLast14 = dailyData.reduce((sum, d) => sum + d.income, 0);
-  const totalExpenseLast14 = dailyData.reduce((sum, d) => sum + d.expense, 0);
-  const netFlowLast14 = totalIncomeLast14 - totalExpenseLast14;
+  const totalIncomeLast7 = dailyData.reduce((sum, d) => sum + d.income, 0);
+  const totalExpenseLast7 = dailyData.reduce((sum, d) => sum + d.expense, 0);
+  const netFlowLast7 = totalIncomeLast7 - totalExpenseLast7;
 
   return (
     <>
-      <div className="min-h-screen bg-slate-900 text-white">
+      <div className="min-h-screen text-white">
         <div className="max-w-7xl mx-auto">
 
           <div className="mb-10">
@@ -176,23 +163,23 @@ export default function DashboardPage() {
             <div className="grid grid-cols-3 gap-4 mt-6 text-center">
               <div>
                 <p className="text-xs text-slate-400">Income</p>
-                <p className="text-lg font-bold text-emerald-400">${totalIncomeLast14.toLocaleString()}</p>
+                <p className="text-lg font-bold text-emerald-400">${totalIncomeLast7.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-xs text-slate-400">Spent</p>
-                <p className="text-lg font-bold text-rose-400">${totalExpenseLast14.toLocaleString()}</p>
+                <p className="text-lg font-bold text-rose-400">${totalExpenseLast7.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-xs text-slate-400">Net</p>
-                <p className={`text-lg font-bold ${netFlowLast14 >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                  {netFlowLast14 >= 0 ? '+' : ''}${Math.abs(netFlowLast14).toLocaleString()}
+                <p className={`text-lg font-bold ${netFlowLast7 >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  {netFlowLast7 >= 0 ? '+' : ''}${Math.abs(netFlowLast7).toLocaleString()}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-10">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
               <h3 className="text-xl font-semibold mb-6">Portfolio by Currency</h3>
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
@@ -228,7 +215,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+            <div className="bg-slate-800  border border-slate-700 rounded-2xl p-6">
               <h3 className="text-xl font-semibold mb-6">Top Spending Categories</h3>
               <div className="space-y-4">
                 {expensesByCategory
@@ -251,39 +238,53 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-            <h3 className="text-xl font-semibold mb-6">Recent Transactions</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="text-left text-slate-400 text-sm border-b border-slate-800">
-                    <th className="pb-3">Description</th>
-                    <th className="pb-3">Category</th>
-                    <th className="pb-3">Date</th>
-                    <th className="pb-3 text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800">
-                  {recentTransactions.map((tx: any) => (
-                    <tr key={tx.transactionId} className="hover:bg-slate-800/50 transition">
-                      <td className="py-4">{tx.description || tx.category.name}</td>
-                      <td className="py-4">
-                        <span className="inline-flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: tx.category.colorCode }} />
-                          {tx.category.name}
-                        </span>
-                      </td>
-                      <td className="py-4 text-slate-400">
-                        {format(new Date(tx.transactionDate), 'MMM dd')}
-                      </td>
-                      <td className={`py-4 text-right font-semibold ${tx.isIncome ? 'text-emerald-400' : 'text-rose-400'}`}>
-                        {tx.isIncome ? '+' : '-'}
-                        {formatCurrency(tx.amount, tx.walletCurrency)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className="bg-slate-800  border border-slate-700 rounded-2xl p-2 lg:p-6">
+            <h3 className="text-xl font-semibold mb-6 py-2">Recent Transactions</h3>
+
+            <div className="space-y-3">
+              {recentTransactions.length === 0 ? (
+                <p className="text-center text-slate-500 py-8">No transactions yet</p>
+              ) : (
+                recentTransactions.map((tx: any) => (
+                  <div
+                    key={tx.transactionId}
+                    className="flex items-center justify-between p-1 lg:p-4 bg-slate-700 rounded-xl"
+                  >
+                    <div className="flex items-center lg:gap-4 gap-2 min-w-0 flex-1">
+                      <div className={`p-2.5 rounded-lg ${tx.isIncome ? 'bg-emerald-500/20' : 'bg-rose-500/20'}`}>
+                        {tx.isIncome ? (
+                          <TrendingUp className="w-5 h-5 text-emerald-400" />
+                        ) : (
+                          <TrendingDown className="w-5 h-5 text-rose-400" />
+                        )}
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="font-medium text-slate-100 truncate">
+                          {tx.description || tx.category.name}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: tx.category.colorCode || '#64748b' }}
+                          />
+                          <p className="text-xs text-slate-400 truncate">
+                            {tx.category.name} • {format(new Date(tx.transactionDate), 'MMM dd, yyyy')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Amount + Currency */}
+                    <div className="text-right ml-4">
+                      <p className={`lg:text-lg font-bold ${tx.isIncome ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        {tx.isIncome ? '+' : '−'}{formatCurrency(tx.amount, tx.walletCurrency)}
+                      </p>
+                      <p className="text-xs text-slate-500">{tx.walletCurrency}</p>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

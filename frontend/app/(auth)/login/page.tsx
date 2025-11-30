@@ -32,8 +32,8 @@ const page = () => {
             localStorage.setItem("token", data.token);
             router.push("/dashboard")          
         }
-        catch(err) {    
-
+        catch(err :any){                
+            setError(err?.response?.data?.error || "Something went wrong");
         }finally{
             setLoading(false)
         }

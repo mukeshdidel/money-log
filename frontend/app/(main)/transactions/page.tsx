@@ -1,10 +1,9 @@
 "use client"
 import { BE_URL } from '@/config/appConfig';
-import DownArrow from '@/Icons/DownArrow';
-import UpArrow from '@/Icons/UpArrow';
 import { selectTransactions, setTransactions } from '@/lib/features/transactions/transactionSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import axios from 'axios';
+import { TrendingDown, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react'
 
 const Page = () => {
@@ -81,7 +80,7 @@ const Page = () => {
                                                     ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 group-hover:bg-emerald-500/20' 
                                                     : 'bg-rose-500/10 border-rose-500/20 text-rose-500 group-hover:bg-rose-500/20'
                                             }`}>
-                                                {tx?.isIncome ? <UpArrow /> : <DownArrow /> }
+                                                {tx?.isIncome ? <TrendingUp /> : <TrendingDown /> }
                                                 
                                             </div>
                                             

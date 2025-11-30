@@ -1,7 +1,7 @@
-import DownArrow from "@/Icons/DownArrow";
-import UpArrow from "@/Icons/UpArrow";
+
 import { selectWalletById } from "@/lib/features/wallets/walletSlice";
 import { useAppSelector } from "@/lib/hooks"
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 const TransactionHistory = ({ walletId }: { walletId: number }) => {
 
@@ -31,7 +31,7 @@ const TransactionHistory = ({ walletId }: { walletId: number }) => {
                                             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 group-hover:bg-emerald-500/20' 
                                             : 'bg-rose-500/10 border-rose-500/20 text-rose-500 group-hover:bg-rose-500/20'
                                     }`}>
-                                        {tx?.isIncome ? <UpArrow /> : <DownArrow /> }
+                                        {tx?.isIncome ? <TrendingUp  /> : <TrendingDown /> }
                                         
                                     </div>
                                     

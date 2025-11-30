@@ -83,7 +83,7 @@ const layout = ({children}: {children: ReactNode}) => {
                 <div className="max-[1024px]:hidden">
                     <Sidebar />
                 </div>
-                <div className="grow m-3 rounded-lg p-5 lg:bg-slate-900 pb-16">{children}</div>
+                <div className="grow m-3 rounded-lg lg:p-5 p-1 lg:bg-slate-900 pb-16">{children}</div>
             </div>
             <Bottombar />
         </div>

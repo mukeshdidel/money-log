@@ -38,8 +38,8 @@ const page = () => {
             const data = res.data;
             toast.success("signup successfull")
         }
-        catch(err) {    
-
+        catch(err :any) {    
+            setError(err?.response?.data?.error || "Something went wrong");
         }finally{
             setLoading(false)
         }
