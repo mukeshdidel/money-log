@@ -6,6 +6,7 @@ import Topbar from "@/components/Topbar/Topbar"
 import { BE_URL } from "@/config/appConfig"
 import { setCategories } from "@/lib/features/categories/categoriesSlice"
 import { setUser } from "@/lib/features/user/userSlice"
+import { setwallets } from "@/lib/features/wallets/walletSlice"
 import { useAppDispatch } from "@/lib/hooks"
 import axios from "axios"
 import { useRouter } from "next/navigation"
@@ -55,6 +56,25 @@ const layout = ({children}: {children: ReactNode}) => {
         getProfile();
         getCategories();
     },[dispatch])
+
+
+    const fetchWallets = async () => {
+        try {
+            const res = await axios.get(`${BE_URL}/wallet`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            dispatch(setwallets(res.data));
+        } catch (error) {
+            console.error('Error fetching wallets:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchWallets();
+    }, [dispatch])
+
 
     return (
         <div className="min-h-screen bg-slate-900 lg:bg-slate-950 text-white">

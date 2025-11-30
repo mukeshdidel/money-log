@@ -16,7 +16,7 @@ const Bottombar = () => {
     { name: "Dashboard", href: "/dashboard", icon: <HomeIcon /> },
     { name: "wallets", href: "/wallets", icon: <WalletIcon /> },
     { name: "Transactions", href: "/transactions", icon: <ArrowsIcon /> },
-    { name: "categories", href: "/categories", icon: <SquarePlusIcon /> },
+    // { name: "categories", href: "/categories", icon: <SquarePlusIcon /> },
   ];
 
   return (

@@ -1,13 +1,11 @@
 'use client'
 
 import AddWallet from '@/components/AddWallet'
-import { BE_URL } from '@/config/appConfig'
 import CardIcon from '@/Icons/CardIcon'
-import { selectwallets, setwallets } from '@/lib/features/wallets/walletSlice'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import axios from 'axios'
+import { selectwallets} from '@/lib/features/wallets/walletSlice'
+import {useAppSelector } from '@/lib/hooks'
 import Link from 'next/link'
-import React, { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 
 const formatCurrency = (value: number, currency = 'USD') =>
