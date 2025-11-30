@@ -1,7 +1,6 @@
 package com.mukesh.moneyLogBackend.exceptions;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
@@ -16,9 +15,6 @@ public class ApiException {
     public ApiException(String error, HttpStatus statusCode) {
         this.error = error;
         this.statusCode = statusCode;
-    }
-
-    public ApiException() {
         this.timeStamp = LocalDateTime.now();
     }
 }

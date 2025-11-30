@@ -88,15 +88,15 @@ public class AuthService {
 
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        if (!isAccountActive(loginRequestDto.getEmail())){
-            throw new AccountNotActivatedException();
-        }
-
         Authentication authentication = null;
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
         } catch (Exception ex) {
             throw new InvalidCredentialsException("Invalid email or password");
+        }
+
+        if (!isAccountActive(loginRequestDto.getEmail())){
+            throw new AccountNotActivatedException();
         }
 
         User user = (User) authentication.getPrincipal();

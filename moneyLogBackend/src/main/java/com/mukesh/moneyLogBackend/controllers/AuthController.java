@@ -5,6 +5,7 @@ import com.mukesh.moneyLogBackend.dto.*;
 import com.mukesh.moneyLogBackend.exceptions.AccountNotActivatedException;
 import com.mukesh.moneyLogBackend.service.AuthService;
 import com.mukesh.moneyLogBackend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> registerProfile(@RequestBody SignupRequestDto signupRequestDto){
+    public ResponseEntity<SignupResponseDto> registerProfile(@Valid @RequestBody SignupRequestDto signupRequestDto){
         SignupResponseDto registeredUser = authService.registerUser(signupRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
 
     @GetMapping("/activate")
-    public ResponseEntity<String> activateProfile(@RequestParam String token) {
+    public ResponseEntity<String> activateProfile(@Valid @RequestParam String token) {
 
         boolean isActivated = authService.activateProfile(token);
         if(isActivated){
