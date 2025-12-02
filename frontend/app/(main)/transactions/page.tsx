@@ -1,19 +1,23 @@
 "use client"
 import { BE_URL } from '@/config/appConfig';
-import { selectTransactions, setTransactions } from '@/lib/features/transactions/transactionSlice';
+import { selectTransactions, selectTransactionsLoading, setTransactions, setTransactionsError, setTransactionsLoading } from '@/lib/features/transactions/transactionSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import axios from 'axios';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react'
+import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from 'react-loading-skeleton'
 
 const Page = () => {
 
     const transactions = useAppSelector(selectTransactions)
     const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
+    const loading = useAppSelector(selectTransactionsLoading);
 
     const dispatch = useAppDispatch();
 
     const fetchTransactions = async () => {
+        dispatch(setTransactionsLoading(true));
         try {
             const res = await  axios.get(`${BE_URL}/transaction`, {
                 headers: {
@@ -24,6 +28,10 @@ const Page = () => {
 
         } catch (error) {
             console.log(error);
+            dispatch(setTransactionsError("Failed to fetch transactions"));
+        }
+        finally {
+            dispatch(setTransactionsLoading(false));
         }
     }
 
@@ -58,7 +66,12 @@ const Page = () => {
                         ))}
                     </div>
                 </div>
-
+                
+                {
+                loading ? <div className='space-y-3'>
+                    {[1,2,3,4,5].map((_, idx) => ( <Skeleton key={idx} height={80} borderRadius={16} /> ))}
+                </div> 
+                : 
                 <div className="space-y-3">
                     {!filteredTransactions || filteredTransactions.length === 0 ? (
                         <div className="py-20 text-center border border-dashed border-slate-800 rounded-xl">
@@ -118,6 +131,7 @@ const Page = () => {
                         })
                     )}
                 </div>
+                }
             </div>
         </div>
     )

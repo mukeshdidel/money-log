@@ -1,11 +1,14 @@
 
-import { selectWalletById } from "@/lib/features/wallets/walletSlice";
+import { selectWalletById, selectWalletsLoading } from "@/lib/features/wallets/walletSlice";
 import { useAppSelector } from "@/lib/hooks"
 import { TrendingDown, TrendingUp } from "lucide-react";
+import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from 'react-loading-skeleton'
 
 const TransactionHistory = ({ walletId }: { walletId: number }) => {
 
     const wallet = useAppSelector(selectWalletById(walletId))!;
+    const isWalletsLoading = useAppSelector(selectWalletsLoading);
 
     return (
         <div>
@@ -13,6 +16,8 @@ const TransactionHistory = ({ walletId }: { walletId: number }) => {
                 <h2 className="text-xl font-semibold text-white">Transaction History</h2>
             </div>
 
+            
+            {isWalletsLoading ? <Skeleton height={300} borderRadius={16} /> :
             <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
                 {!wallet?.transactions || wallet?.transactions.length === 0 ? (
                     <div className="p-12 text-center flex flex-col items-center justify-center text-slate-500">
@@ -59,6 +64,7 @@ const TransactionHistory = ({ walletId }: { walletId: number }) => {
                     </div>
                 )}
             </div>
+            }   
         </div>
     )
 }

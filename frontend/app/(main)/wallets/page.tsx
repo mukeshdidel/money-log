@@ -1,11 +1,13 @@
 'use client'
 
 import AddWallet from '@/components/AddWallet'
-import { selectwallets} from '@/lib/features/wallets/walletSlice'
+import { selectwallets, selectWalletsLoading} from '@/lib/features/wallets/walletSlice'
 import {useAppSelector } from '@/lib/hooks'
 import { CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 
 const formatCurrency = (value: number, currency = 'USD') =>
@@ -15,13 +17,13 @@ const page = () => {
 
   const [showForm, setShowForm] = useState(false)
   const wallets = useAppSelector(selectwallets);
-
+  const isWalletsLoading = useAppSelector(selectWalletsLoading)
 
 
   return (
     <div className="h-full text-slate-100 p-6">
       <div className="max-w-6xl mx-auto">
-        <header className="mb-6 flex items-center justify-between gap-4">
+        <div className="mb-6 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold">Wallets</h1>
           </div>
@@ -34,11 +36,17 @@ const page = () => {
               + Add wallet
             </button>
           </div>
-        </header>
+        </div>
 
-        <section>
+        <div>
 
-
+        
+          {isWalletsLoading ? <div className='grid gap-4 md:grid-cols-2'>
+            <Skeleton height={250} borderRadius={16}/>
+            <Skeleton height={250} borderRadius={16}/>
+            <Skeleton height={250} borderRadius={16}/> 
+          </div> 
+          :
           <div className="grid gap-4 md:grid-cols-2">
             {wallets.length === 0 && (
               <div className="col-span-full text-center text-slate-400 py-12 border border-dashed border-slate-700 rounded-lg">
@@ -90,7 +98,8 @@ const page = () => {
                 </div>
             ))}
           </div>
-        </section>
+          }
+        </div>
         </div>
         {showForm && <AddWallet setShowForm={setShowForm} />}
     </div>

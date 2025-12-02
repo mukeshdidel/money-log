@@ -16,19 +16,35 @@ interface Transaction  {
 
 
 
-const initialState: Transaction[] = [];
+const initialState: {
+  loading: boolean;
+  error: string | null;
+  transactions: Transaction[];
+} = {
+  loading: false,
+  error: null,
+  transactions: [],
+};
 
 export const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
   reducers: {
+    setTransactionsLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
+    setTransactionsError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+    },
     setTransactions: (state, action: PayloadAction<Transaction[]>) => {
-      return action.payload;
+      state.transactions = action.payload;
     },
   }
 })
 
-export const { setTransactions } = transactionSlice.actions
-export const selectTransactions = (state: RootState) => state.transactionReducer;
+export const { setTransactions, setTransactionsLoading, setTransactionsError } = transactionSlice.actions
+export const selectTransactions = (state: RootState) => state.transactionReducer.transactions;
+export const selectTransactionsLoading = (state: RootState) => state.transactionReducer.loading;
+export const selectTransactionsError = (state: RootState) => state.transactionReducer.error;
 
 export default transactionSlice.reducer

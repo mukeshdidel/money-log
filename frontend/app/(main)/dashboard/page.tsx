@@ -1,17 +1,13 @@
 'use client';
-
-import { useSelector } from 'react-redux';
-import { RootState } from '@/lib/store';
-import {
-  PieChart, Pie, Cell, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  Legend
-} from 'recharts';
+import {PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { format, parseISO, startOfDay, subDays } from 'date-fns';
-import {
-  DollarSign, Wallet, TrendingUp, TrendingDown,
-  ArrowUpRight, ArrowDownRight, Globe
-} from 'lucide-react';
+import { TrendingUp, TrendingDown, Globe} from 'lucide-react';
+import { selectwallets, selectWalletsLoading } from '@/lib/features/wallets/walletSlice';
+import { selectCategories } from '@/lib/features/categories/categoriesSlice';
+import { useAppSelector } from '@/lib/hooks';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'
+
 
 
 
@@ -24,8 +20,9 @@ const formatCurrency = (amount: number, currency: string) => {
 
 export default function DashboardPage() {
 
-  const wallets = useSelector((state: RootState) => state.walletReducer);
-  const categories = useSelector((state: RootState) => state.categoriesReducer);
+  const wallets = useAppSelector(selectwallets);
+  const categories = useAppSelector(selectCategories);
+  const isWalletsLoading = useAppSelector(selectWalletsLoading);
 
   const walletsByCurrency = wallets.reduce((acc, wallet) => {
     if (!acc[wallet.currency]) {
@@ -45,9 +42,6 @@ export default function DashboardPage() {
   }, {} as Record<string, { wallets: typeof wallets; totalBalance: number; income: number; expenses: number }>);
 
   const currencies = Object.keys(walletsByCurrency);
-
-  const totalWallets = wallets.length;
-
   const recentTransactions = [...wallets.flatMap(w => w.transactions.map(t => ({ ...t, walletCurrency: w.currency })))]
     .sort((a, b) => new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime())
     .slice(0, 10);
@@ -111,10 +105,8 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
-            {currencies.map(currency => {
+            {isWalletsLoading ?  <Skeleton height={150} borderRadius={16} /> : currencies.map(currency => {
               const data = walletsByCurrency[currency];
-              const net = data.income - data.expenses;
-
               return (
                 <div key={currency} className="bg-slate-800 border border-slate-700 rounded-2xl p-4 lg:p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -143,7 +135,8 @@ export default function DashboardPage() {
           </div>
 
           <div className="bg-slate-800 border border-slate-700 rounded-2xl lg:p-5 p-2 mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-center mb-6">Last 14 Days</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-center mb-6">{isWalletsLoading ? <Skeleton width={200} /> : 'Last 14 Days'}</h2>
+            {isWalletsLoading ? <Skeleton height={300} borderRadius={16} /> :
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={dailyData} barGap={4}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
@@ -159,20 +152,20 @@ export default function DashboardPage() {
                 <Bar dataKey="expense" name="Expense" fill="#ef4444" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-
+            }
             <div className="grid grid-cols-3 gap-4 mt-6 text-center">
               <div>
-                <p className="text-xs text-slate-400">Income</p>
-                <p className="text-lg font-bold text-emerald-400">${totalIncomeLast7.toLocaleString()}</p>
+                <p className="text-xs text-slate-400">{isWalletsLoading ? <Skeleton width={50} /> : 'Income'}</p>
+                <p className="text-lg font-bold text-emerald-400">${ isWalletsLoading ? <Skeleton width={100} /> : totalIncomeLast7.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">Spent</p>
-                <p className="text-lg font-bold text-rose-400">${totalExpenseLast7.toLocaleString()}</p>
+                <p className="text-xs text-slate-400">{isWalletsLoading ? <Skeleton width={50} /> : 'Spent'}</p>
+                <p className="text-lg font-bold text-rose-400">${ isWalletsLoading ? <Skeleton width={100} /> :  totalExpenseLast7.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">Net</p>
+                <p className="text-xs text-slate-400">{isWalletsLoading ? <Skeleton width={50} /> : 'Net'}</p>
                 <p className={`text-lg font-bold ${netFlowLast7 >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                  {netFlowLast7 >= 0 ? '+' : ''}${Math.abs(netFlowLast7).toLocaleString()}
+                  ${isWalletsLoading ? <Skeleton width={100} /> : `${netFlowLast7 >= 0 ? '+' : ''} ${Math.abs(netFlowLast7).toLocaleString()}`}
                 </p>
               </div>
             </div>
@@ -180,7 +173,8 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-10">
             <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-6">Portfolio by Currency</h3>
+              <h3 className="text-xl font-semibold mb-6">{isWalletsLoading ? <Skeleton width={200} /> : 'Portfolio by Currency'}</h3>
+              {isWalletsLoading ? <Skeleton height={320} borderRadius={16} /> :
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
                   <Pie
@@ -205,6 +199,7 @@ export default function DashboardPage() {
                   />
                 </PieChart>
               </ResponsiveContainer>
+              }
               <div className="mt-6 flex flex-wrap gap-4 justify-center">
                 {currencies.map((cur, i) => (
                   <div key={cur} className="flex items-center gap-2">
@@ -213,10 +208,15 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
+              
             </div>
 
             <div className="bg-slate-800  border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-6">Top Spending Categories</h3>
+              <h3 className="text-xl font-semibold mb-6">{isWalletsLoading ? <Skeleton width={200} /> : 'Top Spending Categories'}</h3>
+                            
+              {
+              isWalletsLoading ? <Skeleton height={320} borderRadius={16} /> : 
+              
               <div className="space-y-4">
                 {expensesByCategory
                   .sort((a, b) => b.total - a.total)
@@ -235,6 +235,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
               </div>
+              }
             </div>
           </div>
 

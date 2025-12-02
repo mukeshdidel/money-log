@@ -4,13 +4,14 @@ import Bottombar from "@/components/bottombar/Bottombar"
 import Sidebar from "@/components/Sidebar/Sidebar"
 import Topbar from "@/components/Topbar/Topbar"
 import { BE_URL } from "@/config/appConfig"
-import { setCategories } from "@/lib/features/categories/categoriesSlice"
-import { setUser } from "@/lib/features/user/userSlice"
-import { setwallets } from "@/lib/features/wallets/walletSlice"
+import { setCategories, setCategoriesError, setCategoriesLoading } from "@/lib/features/categories/categoriesSlice"
+import { setUser, setUserLoading } from "@/lib/features/user/userSlice"
+import { setWallets, setWalletsError, setWalletsLoading } from "@/lib/features/wallets/walletSlice"
 import { useAppDispatch } from "@/lib/hooks"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { ReactNode, useEffect } from "react"
+import { SkeletonTheme } from "react-loading-skeleton"
 
 const layout = ({children}: {children: ReactNode}) => {
     const router = useRouter()
@@ -18,6 +19,7 @@ const layout = ({children}: {children: ReactNode}) => {
 
 
     const getProfile = async () => {
+        dispatch(setUserLoading(true));
         try {
             const res =  await axios.get(`${BE_URL}/profile`, {
                 headers: {
@@ -31,9 +33,13 @@ const layout = ({children}: {children: ReactNode}) => {
         catch(err){
             router.push("/login");
         }
+        finally {
+            dispatch(setUserLoading(false));
+        }
     }
 
     const getCategories = async () => {
+        dispatch(setCategoriesLoading(true));
         try {
             const res =  await axios.get(`${BE_URL}/category`, {
                 headers: {
@@ -45,7 +51,10 @@ const layout = ({children}: {children: ReactNode}) => {
 
         }
         catch(err){
-            console.error("Error fetching categories:", err);
+            dispatch(setCategoriesError("Failed to load categories"));
+        }
+        finally {
+            dispatch(setCategoriesLoading(false));
         }
     }
 
@@ -59,15 +68,20 @@ const layout = ({children}: {children: ReactNode}) => {
 
 
     const fetchWallets = async () => {
+        dispatch(setWalletsLoading(true));
         try {
             const res = await axios.get(`${BE_URL}/wallet`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            dispatch(setwallets(res.data));
+            dispatch(setWallets(res.data));
         } catch (error) {
             console.error('Error fetching wallets:', error);
+            dispatch(setWalletsError('Failed to fetch wallets'));
+        }
+        finally{
+            dispatch(setWalletsLoading(false));
         }
     }
 
@@ -77,6 +91,7 @@ const layout = ({children}: {children: ReactNode}) => {
 
 
     return (
+    <SkeletonTheme baseColor="#202020" highlightColor="#444">
         <div className="min-h-screen bg-slate-900 lg:bg-slate-950 text-white">
             <Topbar />
             <div className="flex">
@@ -87,6 +102,7 @@ const layout = ({children}: {children: ReactNode}) => {
             </div>
             <Bottombar />
         </div>
+    </SkeletonTheme>
     )
 }
 

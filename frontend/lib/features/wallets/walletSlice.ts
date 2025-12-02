@@ -30,26 +30,40 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 }
 
 
-const initialState: State[] = [];
+const initialState: {
+  wallets: State[];
+  loading: boolean;
+  error: string | null;
+} = {
+  wallets: [],
+  loading: false,
+  error: null
+};
 
 
 export const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
-    setwallets: (state, action: PayloadAction<State[]>) => {
-      state = action.payload;
+    setWalletsLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
+    setWalletsError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+    },
+    setWallets: (state, action: PayloadAction<State[]>) => {
+      state.wallets = action.payload;
       return state;
     }, 
     addWallet: (state, action: PayloadAction<State>) => {
-      state.push(action.payload);
+      state.wallets.push(action.payload);
     },
     removeWallet: (state, action: PayloadAction<number>) => {
-      return state.filter(wallet => wallet.walletId !== action.payload);
+      state.wallets = state.wallets.filter(wallet => wallet.walletId !== action.payload);
     },
     addTransaction: (state, action: PayloadAction<{walletId: number, transaction: State['transactions'][0]}>) => {
       const { walletId, transaction } = action.payload;
-      const wallet = state.find(w => w.walletId === walletId);
+      const wallet = state.wallets.find(w => w.walletId === walletId);
       if (wallet) {
         wallet.transactions.push(transaction);
         if (transaction.isIncome) {
@@ -62,9 +76,11 @@ export const walletSlice = createSlice({
   }
 })
 
-export const { setwallets, addWallet, removeWallet, addTransaction } = walletSlice.actions
-export const selectwallets = (state: RootState) => state.walletReducer;
+export const { setWallets, setWalletsLoading, setWalletsError, addWallet, removeWallet, addTransaction } = walletSlice.actions
+export const selectwallets = (state: RootState) => state.walletReducer.wallets;
 export const selectWalletById = (walletId: number) => (state: RootState) => 
-    state.walletReducer.find(wallet => wallet.walletId === walletId);
+    state.walletReducer.wallets.find(wallet => wallet.walletId === walletId);
+export const selectWalletsLoading = (state: RootState) => state.walletReducer.loading;
+export const selectWalletsError = (state: RootState) => state.walletReducer.error;
 
 export default walletSlice.reducer
