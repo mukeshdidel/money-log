@@ -1,1 +1,1 @@
-export const BE_URL = "http://localhost:8080/api/v1"
+export const BE_URL = "https://money-log-backend-lbkk.onrender.com/api/v1"
