@@ -36,6 +36,8 @@ public class AuthService {
 
         Optional<User> existingUser = userRepo.findByUsernameOrEmail(signupRequestDto.getUsername(), signupRequestDto.getEmail());
 
+
+
         if(existingUser.isPresent()) {
             if(existingUser.get().getUsername().equals(signupRequestDto.getUsername())) {
                 throw new UsernameAlreadyTakenException(signupRequestDto.getUsername());
